@@ -11,28 +11,39 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
-  int questionIndex = 0; 
-  void answerQuestion(String answer){
-    setState(() {
-      widget.oneSelectAnswer(answer);
-      questionIndex++; 
-    });
+  int questionIndex = 0;
+  void answerQuestion(String answer) {
+    widget.oneSelectAnswer(answer);
+
+    if (questionIndex < questions.length - 1) {
+      setState(() {
+        questionIndex++;
+      });
+    }
   }
 
   @override
   Widget build(context) {
+    final shuffledAnswers = List.of(questions[questionIndex].answers);
+    shuffledAnswers.shuffle();
     return Center(
       child: Column(
         children: [
-          SizedBox(height:10),
+          SizedBox(height: 10),
           Text('Question ${questionIndex + 1}'),
-          SizedBox(height:10),
+          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Text(questions[questionIndex].text),
-          
-          for (String ans in questions[questionIndex].answers)
-            ElevatedButton(onPressed:(){answerQuestion(ans);}, child: Text(ans))
-      ],
-    ),
+
+          for (String ans in shuffledAnswers)
+            ElevatedButton(
+              onPressed: () {
+                answerQuestion(ans);
+              },
+              child: Text(ans),
+            ),
+        ],
+      ),
     );
   }
 }
